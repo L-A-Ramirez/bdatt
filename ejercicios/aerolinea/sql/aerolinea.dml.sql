@@ -9,6 +9,8 @@ insert into vuelos (horaSalida,fecha,horaLlegada,ciudad)
 values (12,"2023-06-21",13,"mdq");
 insert into vuelos (horaSalida,fecha,horaLlegada,ciudad) 
 values (14,"2023-07-05",22,"madrid");
+select * from vuelos;
+describe vuelos;
 
  -- tabla aviones
 insert into aviones (nro,modelo,fabricante,capacidad,angar,nro_vuelo) 
@@ -24,10 +26,10 @@ insert into pilotos (nroLegajo,nro_avion) values (23457333,08);
 insert into pilotos (nroLegajo,nro_avion) values (28547986,12);
 
 -- tabla pasajeros
-insert into pasajeros (pasaporte, nro_vuelo) values (27859865, 1);
-insert into pasajeros (pasaporte, nro_vuelo) values (24568254, 1);
-insert into pasajeros (pasaporte, nro_vuelo) values (25678443, 2);
-insert into pasajeros (pasaporte, nro_vuelo) values (24447658, 3);
+insert into pasajeros (dni, nro_vuelo) values (27859865, 1);
+insert into pasajeros (dni, nro_vuelo) values (24568254, 1);
+insert into pasajeros (dni, nro_vuelo) values (25678443, 2);
+insert into pasajeros (dni, nro_vuelo) values (24447658, 3);
 
 -- Tabla personal
 insert into personal (nroLegajo, nombre, nro_vuelo, areaAsignada)
@@ -36,11 +38,24 @@ insert into personal (nroLegajo, nombre, nro_vuelo, areaAsignada)
 values (23457333, "javier",2,"piloto");
 insert into personal (nroLegajo, nombre, nro_vuelo, areaAsignada)
 values (28547986, "Maximiliano",3,"piloto");
+insert into personal (nroLegajo, nombre, nro_vuelo, areaAsignada)
+values (28547987, "Maximiliano",3,"piloto");
 
 -- tabla piloto_personal
-insert into piloto_personal (nroLegajo_piloto,nroLegajo_personal) 
+insert into pilotos_personal (nroLegajo_piloto,nroLegajo_personal) 
 values (23456745,23456745);
-insert into piloto_personal (nroLegajo_piloto,nroLegajo_personal) 
+insert into pilotos_personal (nroLegajo_piloto,nroLegajo_personal) 
 values (23457333,23457333);
-insert into piloto_personal (nroLegajo_piloto,nroLegajo_personal) 
+insert into pilotos_personal (nroLegajo_piloto,nroLegajo_personal) 
 values (28547986,28547986);
+
+-- -------------------
+-- UPDATE
+-- -------------------
+update vuelos set fecha = "2023-04-27" where nro = 1;
+
+
+-- -------------------
+-- DELETEs
+-- -------------------
+delete from personal where nroLegajo = 28547986;

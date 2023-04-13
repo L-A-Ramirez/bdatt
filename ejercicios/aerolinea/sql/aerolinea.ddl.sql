@@ -79,7 +79,7 @@ add column cargo enum("piloto","copilito","piloto-tecnico");
 
 -- modifico tipo de dato a una variable
 alter table vuelos
-modify column ciudad char;
+modify column ciudad char(255);
 
 -- renombro columna de una tabla
 alter table pasajeros

@@ -14,3 +14,7 @@ select horaSalida, horaLlegada, (horaLlegada - horaSalida) as totalHoras, ciudad
 
 -- Se requiere saber la cantidad de pasajeros con destino a bariloche
 select count(*) as pasajeros_a_bariloche from pasajeros where nro_vuelo = 1; -- no se usa
+
+-- Se requiere saber cual es el maximo de horas de un piloto (pendiente (group))
+
+-- 
