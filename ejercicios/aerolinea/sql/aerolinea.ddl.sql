@@ -99,7 +99,7 @@ drop primary key;
 
 -- agregamos primary key
 alter table pilotos_personal
-modify column id int primary key;
+modify column id int primary key auto_increment;
 
 -- actualizamos una variable
 alter table personal
