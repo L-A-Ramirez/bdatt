@@ -25,6 +25,7 @@ insert into pilotos (nroLegajo,nro_avion) values (28547986,12);
 
 -- tabla pasajeros
 insert into pasajeros (pasaporte, nro_vuelo) values (27859865, 1);
+insert into pasajeros (pasaporte, nro_vuelo) values (24568254, 1);
 insert into pasajeros (pasaporte, nro_vuelo) values (25678443, 2);
 insert into pasajeros (pasaporte, nro_vuelo) values (24447658, 3);
 
@@ -43,17 +44,3 @@ insert into piloto_personal (nroLegajo_piloto,nroLegajo_personal)
 values (23457333,23457333);
 insert into piloto_personal (nroLegajo_piloto,nroLegajo_personal) 
 values (28547986,28547986);
-
-
-/*
-	Consultas
-*/
-
-select * from vuelos;
-select * from pasajeros;
-select * from personal;
-select * from aviones;
-select * from pilotos;
-select * from piloto_personal;
-
-select horaSalida, horaLlegada, (horaLlegada - horaSalida) as totalHoras from vuelos;

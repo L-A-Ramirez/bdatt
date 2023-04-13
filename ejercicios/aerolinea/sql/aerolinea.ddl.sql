@@ -30,8 +30,8 @@ create table pilotos( -- creamos tabla pilotos
 
 create table piloto_personal( -- creamos tabla intermediaria entre piloto y personal
 	id int primary key auto_increment,
-    nroLegajo_piloto int,
-    nroLegajo_personal int
+    nroLegajo_piloto int not null,
+    nroLegajo_personal int not null
 );
 
 create table aviones( -- creamos tabla aviones
@@ -48,7 +48,7 @@ create table aviones( -- creamos tabla aviones
 */
 
 /*
-	1) Alterame la tabla piloto_personal
+	1) Alterame la tabla pilotos_personal
     2) Agregame foreign key/clave secundaria a la variable/atributo "nroLegajo_piloto"
     3) Referenciame (la fk "nroLegajo") a la entidad "pilotos" a la variable/atributo (PK) "nroLegajo"
 */
@@ -68,3 +68,39 @@ references pilotos (nroLegajo);
 alter table piloto_personal
 add foreign key (nroLegajo_personal)
 references personal (nroLegajo);
+
+-- renombro la tabla
+alter table piloto_personal
+rename pilotos_personal;
+
+-- agrego columna nueva a piloto_personal
+alter table pilotos_personal
+add column cargo enum("piloto","copilito","piloto-tecnico");
+
+-- modifico tipo de dato a una variable
+alter table vuelos
+modify column ciudad char;
+
+-- renombro columna de una tabla
+alter table pasajeros
+change pasaporte dni int;
+
+-- eliminar columna de una tabla
+alter table pilotos_personal
+drop column cargo;
+
+-- elimintar extra (auto_increment)
+alter table pilotos_personal
+modify column id int;
+
+-- eliminamos foreign key a una variable de una tabla
+alter table pilotos_personal
+drop primary key;
+
+-- agregamos primary key
+alter table pilotos_personal
+modify column id int primary key;
+
+-- actualizamos una variable
+alter table personal
+modify column areaAsignada ENUM("azafata","soporte","limpieza","piloto","cocinero");
