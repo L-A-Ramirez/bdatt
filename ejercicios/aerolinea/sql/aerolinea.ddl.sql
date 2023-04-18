@@ -6,14 +6,28 @@ create database if not exists aerolinea; -- Crear base de datos
 
 use aerolinea; -- Uso base de datos
 
-create TABLE pasajeros( pasaporte int PRIMARY KEY, nro_vuelo int); -- Creamos tabla pasajeros
+create TABLE pasajeros( 
+	pasaporte int PRIMARY KEY, 
+    nro_vuelo int
+); -- Creamos tabla pasajeros
+
+create table personas(
+	pasaporte int primary key,
+	nombre varchar(25),
+    apellido varchar(25),
+    fechaNacimiento date,
+    nacionalidad enum("Argentina","Mexico","Chile","Peru","Colombia","Paraguay","Ecuador","Bolivia","Uruguay"),
+    telefono int,
+    email varchar(50)
+);
 
 CREATE TABLE vuelos( -- Creamos tabla vuelos
 	nro int PRIMARY KEY AUTO_INCREMENT,
     horaSalida int,
     fecha date,
     horaLlegada int,
-    ciudad varchar(50)
+    ciudad varchar(50),
+    precio double
 );
 
 CREATE table personal( -- Creamos tabla personal
@@ -68,6 +82,10 @@ references pilotos (nroLegajo);
 alter table piloto_personal
 add foreign key (nroLegajo_personal)
 references personal (nroLegajo);
+
+alter table personas 
+add foreign key (pasaporte)
+references pasajeros (pasaporte);
 
 -- renombro la tabla
 alter table piloto_personal
