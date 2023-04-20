@@ -8,11 +8,15 @@ VALUES (12,"2023-04-24", 14, "chile",20000.59);
 insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
 values (12,"2023-06-21",13,"uruguay",10000.99);
 insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
+values (13,"2023-06-25",1430,"uruguay",9999.99);
+insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
 values (14,"2023-07-04",22,"madrid",28000.99);
 insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
 values (16,"2023-06-02",19,"colombia",26000.99);
 insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
 values (17,"2023-07-15",19,"venezuela",25000.99);
+insert into vuelos (horaSalida,fecha,horaLlegada,ciudad, precio) 
+values (14,"2023-07-16",16,"venezuela",20000.99);
 
  -- tabla aviones
 insert into aviones (nro,modelo,fabricante,capacidad,angar,nro_vuelo) 
