@@ -1,28 +1,29 @@
--- show DATABASES; -- Mostrar base de datos
+-- Comentario de una linea
 
-drop database if exists aerolinea; -- Borrar base de datos
+/* 
+	Comentario de bloque
+*/
 
-create database if not exists aerolinea; -- Crear base de datos
+-- SHOW DATABASES; -- Muestra las bases de datos
 
-use aerolinea; -- Uso base de datos
+drop database if exists aerolinea; -- Borra la base de datos
+create database if not exists aerolinea;
+use aerolinea;
 
-create TABLE pasajeros( 
-	pasaporte int PRIMARY KEY, 
-    nro_vuelo int
-); -- Creamos tabla pasajeros
+/* 
+	drop table if exists pasajeros;
+	drop table if exists vuelos;
+	drop table if exists personal;
+	drop table if exists aviones;
+	drop table if exists pilotos;
+	drop table if exists piloto_personal;
+*/
 
-create table personas(
-	pasaporte int primary key,
-	nombre varchar(25),
-    apellido varchar(25),
-    fechaNacimiento date,
-    nacionalidad enum("Argentina","Mexico","Chile","Peru","Colombia","Paraguay","Ecuador","Bolivia","Uruguay"),
-    telefono int,
-    email varchar(50)
-);
+-- SHOW TABLES; -- mostrar las tablas
 
-CREATE TABLE vuelos( -- Creamos tabla vuelos
-	nro int PRIMARY KEY AUTO_INCREMENT,
+-- Creamos tabla pasajeros
+CREATE TABLE vuelos(
+	nro int primary key auto_increment,
     horaSalida int,
     fecha date,
     horaLlegada int,
@@ -30,95 +31,80 @@ CREATE TABLE vuelos( -- Creamos tabla vuelos
     precio double
 );
 
-CREATE table personal( -- Creamos tabla personal
-	nroLegajo int primary key,
-    nombre varchar(25),
-    nro_vuelo int,
-    areaAsignada ENUM("azafata","soporte","limpieza","piloto")
+create table personas (
+	pasaporte int primary key,
+    nombre varchar(50),
+    apellido varchar(50),
+    tel int,
+    email varchar(50)
 );
 
-create table pilotos( -- creamos tabla pilotos
+CREATE TABLE pasajeros(
+	pasaporte int PRIMARY KEY,
+	nro_vuelo int
+);
+
+CREATE TABLE personal(
+	nroLegajo int primary key,
+    nombre varchar(25),
+    areaAsignada enum('azafata','soporte','limpieza','piloto'),
+	nro_vuelo int
+);
+
+CREATE TABLE aviones(
+	nro int primary key,
+    modelo varchar(50),
+    fabricante varchar(50),
+    capacidad int,
+    pista varchar(12),
+    nro_vuelo int
+);
+
+create table pilotos(
 	nroLegajo int primary key,
     nro_avion int
 );
 
-create table piloto_personal( -- creamos tabla intermediaria entre piloto y personal
+create table piloto_personal(
 	id int primary key auto_increment,
-    nroLegajo_piloto int not null,
-    nroLegajo_personal int not null
-);
-
-create table aviones( -- creamos tabla aviones
-	nro int primary key auto_increment,
-    modelo varchar(50),
-    fabricante varchar(25),
-    capacidad int,
-    angar varchar(12),
-    nro_vuelo int
+    nroLegajo_piloto int,
+    nroLegajo_personal int
 );
 
 /* 
-	Cardinalidad
+	Relaciones entre tablas (alter table) 
 */
 
-/*
-	1) Alterame la tabla pilotos_personal
-    2) Agregame foreign key/clave secundaria a la variable/atributo "nroLegajo_piloto"
-    3) Referenciame (la fk "nroLegajo") a la entidad "pilotos" a la variable/atributo (PK) "nroLegajo"
+/* 
+	1) alterame la tabla pasajeros
+    2) agregame foreign key (fk) a la variable "nro_vuelo"
+    3) referenciame la fk a la variable "nro" de la tabla vuelos
 */
 
-alter table pasajeros add foreign key (nro_vuelo) references vuelos(nro);
+alter table pasajeros 
+add foreign key (nro_vuelo)
+references vuelos (nro);
 
-alter table aviones add foreign key (nro_vuelo) references vuelos(nro);
+alter table personal 
+add foreign key (nro_vuelo)
+references vuelos (nro);
 
-alter table personal add foreign key (nro_vuelo) references vuelos(nro);
+alter table aviones 
+add foreign key (nro_vuelo)
+references vuelos (nro);
 
-alter table pilotos add foreign key (nro_avion) references aviones(nro);
+alter table pilotos 
+add foreign key (nro_avion)
+references aviones (nro);
 
-alter table piloto_personal
+alter table piloto_personal 
 add foreign key (nroLegajo_piloto)
 references pilotos (nroLegajo);
 
-alter table piloto_personal
+alter table piloto_personal 
 add foreign key (nroLegajo_personal)
 references personal (nroLegajo);
 
 alter table personas 
 add foreign key (pasaporte)
 references pasajeros (pasaporte);
-
--- renombro la tabla
-alter table piloto_personal
-rename pilotos_personal;
-
--- agrego columna nueva a piloto_personal
-alter table pilotos_personal
-add column cargo enum("piloto","copilito","piloto-tecnico");
-
--- modifico tipo de dato a una variable
-alter table vuelos
-modify column ciudad char(255);
-
--- renombro columna de una tabla
-alter table pasajeros
-change pasaporte dni int;
-
--- eliminar columna de una tabla
-alter table pilotos_personal
-drop column cargo;
-
--- elimintar extra (auto_increment)
-alter table pilotos_personal
-modify column id int;
-
--- eliminamos foreign key a una variable de una tabla
-alter table pilotos_personal
-drop primary key;
-
--- agregamos primary key
-alter table pilotos_personal
-modify column id int primary key auto_increment;
-
--- actualizamos una variable
-alter table personal
-modify column areaAsignada ENUM("azafata","soporte","limpieza","piloto","cocinero");

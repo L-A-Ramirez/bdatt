@@ -37,8 +37,8 @@ select ciudad, avg(precio) promedio_total from vuelos where ciudad = "venezuela"
 
 /* 
 	consultas condicionadas:
-    menor (<), mayor(>), menor igual (<=), mayor igual (>=)
-    and/between, or/in
+    menor (<), mayor(>), menor igual (<=), mayor igual (>=), distinto (!=)
+    and, between, or/in, 
 */
 -- Se requiere saber cual es el precio menor o igual a 20000
 select ciudad, precio from vuelos where precio <= 20000;
@@ -63,9 +63,14 @@ select ciudad, min(precio) precio_minimo from vuelos where ciudad = "venezuela";
 -- Quiero localizar el vuelo de venezuela con el precio más alto
 select ciudad, max(precio) precio_maximo from vuelos where ciudad = "venezuela";
 
--- Se requiere saber cual es el maximo de horas de un piloto (pendiente (group))
-select horaSalida, horaLlegada, min(horaLlegada - horaSalida) totalHoras, ciudad
-from vuelos; -- pendiente
+-- Group by
+select count(*), ciudad from vuelos group by ciudad;
+
+-- Se requiere saber cual es el maximo de horas de un piloto
+select @maximoHorasVuelo := max(horaLlegada - horaSalida) from vuelos;
+
+select horaSalida, horaLlegada, (horaLlegada - horaSalida) totalHoras, ciudad
+from vuelos having totalHoras =  @maximoHorasVuelo;
 
 /* 
 	Join
@@ -80,6 +85,8 @@ select dni ,ciudad, precio from pasajeros join vuelos on pasajeros.nro_vuelo = v
 select count(*) as cantidad_pasajeros, ciudad from pasajeros 
 join vuelos on pasajeros.nro_vuelo = vuelos.nro where ciudad = "chile";
 
--- Group by
-select count(*), ciudad from vuelos group by ciudad;
+/* 
+	Se quiere saber el pasaporte,nombre, apellido,ciudad,hora de salida y la pista
+    del avion con destino a 
+*/
 
