@@ -2,13 +2,6 @@
 	Consultas
 */
 
-select * from vuelos;
-select * from pasajeros;
-select * from personal;
-select * from aviones;
-select * from pilotos;
-select * from piloto_personal;
-
 /* Consulta de columnas calculadas */
 -- Se requiere saber las horas totales de los pilotos en los vuelos y la ciudad de destino
 select horaSalida, horaLlegada, (horaLlegada - horaSalida) as totalHoras, ciudad from vuelos;
@@ -63,8 +56,19 @@ select ciudad, min(precio) precio_minimo from vuelos where ciudad = "venezuela";
 -- Quiero localizar el vuelo de venezuela con el precio más alto
 select ciudad, max(precio) precio_maximo from vuelos where ciudad = "venezuela";
 
--- Group by
+-- Group by (having)
 select count(*), ciudad from vuelos group by ciudad;
+
+/* 
+	Agrupamos y contamos la suma de precio de los vuelos que sean mayores 
+	al promedio del precio de chile
+*/
+
+-- resultado de la consulta que se guarda en la variable @promVuelosChile
+select @promVuelosChile:=avg(precio) from vuelos where ciudad = "chile";
+
+select avg(precio), ciudad from vuelos
+group by ciudad having avg(precio) > @promVuelosChile;
 
 -- Se requiere saber cual es el maximo de horas de un piloto
 select @maximoHorasVuelo := max(horaLlegada - horaSalida) from vuelos;
@@ -79,14 +83,44 @@ from vuelos having totalHoras =  @maximoHorasVuelo;
     3) relacionamos las llave (fk y pk) "pasajeros.nro_vuelo = vuelos.nro"
 */
 
-select dni ,ciudad, precio from pasajeros join vuelos on pasajeros.nro_vuelo = vuelos.nro;
+select pasaporte ,ciudad, precio from pasajeros 
+join vuelos on pasajeros.nro_vuelo = vuelos.nro;
 
 -- Obtenemos la cantidad de pasajeros con destino a chile
 select count(*) as cantidad_pasajeros, ciudad from pasajeros 
 join vuelos on pasajeros.nro_vuelo = vuelos.nro where ciudad = "chile";
 
 /* 
-	Se quiere saber el pasaporte,nombre, apellido,ciudad,hora de salida y la pista
-    del avion con destino a 
+	Se quiere saber el pasaporte,nombre, apellido,ciudad,hora de salida 
+    y la pista del avion con destino a colombia.
+    
+	seleccioname pasaporte de pasajeros,su nombres y apellido de la tabla
+    personas, la ciudad, la hora de salida y el precio de la tabla vuelos 
+    y la pista de la tabla aviones
 */
+select pas.pasaporte,per.nombre,per.apellido,v.ciudad,v.horaSalida,v.precio,a.pista
+from vuelos v left join pasajeros pas on v.nro = pas.nro_vuelo
+join personas per on pas.pasaporte = per.pasaporte
+join aviones a on v.nro = a.nro_vuelo;
+
+/* 
+	left join: Trae todos los registros de la izquierda que tengan y no tenga relación con la tabla derecha
+    right join: Trae todos los registros de la derecha que tengan y no tenga relación con la tabla izquierda
+    inner join: Trae todos los registros que solo tengan relación (es igual a "join")
+*/
+
+select pas.pasaporte,v.ciudad,v.horaSalida,v.precio
+from vuelos v right join pasajeros pas on v.nro = pas.nro_vuelo;
+
+/*
+	Quiero saber nombre del piloto, el modelo de avion y el fabricante
+    la ciudad y las horas totales de vuelo
+ */
+ 
+select p.nroLegajo,p.nombre, a.modelo, a.fabricante, v.ciudad, (v.horaLlegada - v.horaSalida) totalHoras
+from vuelos v
+join personal p on p.nro_vuelo = v.nro
+join piloto_personal p_p on p_p.nroLegajo_personal = p.nroLegajo
+join pilotos pi on p_p.nroLegajo_piloto = pi.nroLegajo
+join aviones a on pi.nro_avion = a.nro;
 
