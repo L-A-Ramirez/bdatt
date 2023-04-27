@@ -1,18 +1,26 @@
-/*
-	Consultas
-*/
-
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 /* Consulta de columnas calculadas */
+-- order(asc y desc) by y like "% %"
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 -- Se requiere saber las horas totales de los pilotos en los vuelos y la ciudad de destino
 select horaSalida, horaLlegada, (horaLlegada - horaSalida) as totalHoras, ciudad from vuelos;
 
 -- Quiero sacar un descuento del 20% a todos los vuelos
-select ciudad, precio, (precio*0.80) as descuento_20 from vuelos;
+select ciudad, precio, (precio*0.80) as descuento_20 from vuelos order by precio;
 
 -- Quiero mostrar el precio del incremento del 10% del pasaje de los vuelos
 select ciudad, precio, (precio*1.10) as incremento_10 from vuelos;
 
+-- Quiero que me muestre las ciudades que comienzen con "ch"
+select ciudad from vuelos where ciudad like "%ch%";
+
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 /* Consulta condicionadas y con funciones */
+-- ---------------------------------------------------------
+-- --------------------------------------------------------
 -- Se requiere saber la cantidad de pasajeros con destino a chile (1)
 select count(*) as pasajeros_a_bariloche from pasajeros where nro_vuelo = 1; -- no se usa
 
@@ -28,11 +36,15 @@ select ciudad, sum(precio) suma_total from vuelos where ciudad = "venezuela";
 -- Obtenemos el promedio total de vuelos a venezuela
 select ciudad, avg(precio) promedio_total from vuelos where ciudad = "venezuela";
 
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 /* 
 	consultas condicionadas:
     menor (<), mayor(>), menor igual (<=), mayor igual (>=), distinto (!=)
     and, between, or/in, 
 */
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 -- Se requiere saber cual es el precio menor o igual a 20000
 select ciudad, precio from vuelos where precio <= 20000;
 
@@ -56,7 +68,12 @@ select ciudad, min(precio) precio_minimo from vuelos where ciudad = "venezuela";
 -- Quiero localizar el vuelo de venezuela con el precio más alto
 select ciudad, max(precio) precio_maximo from vuelos where ciudad = "venezuela";
 
--- Group by (having)
+
+-- --------------------------------------------------------
+-- --------------------------------------------------------
+-- Group by, having y variables
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 select count(*), ciudad from vuelos group by ciudad;
 
 /* 
@@ -76,15 +93,30 @@ select @maximoHorasVuelo := max(horaLlegada - horaSalida) from vuelos;
 select horaSalida, horaLlegada, (horaLlegada - horaSalida) totalHoras, ciudad
 from vuelos having totalHoras =  @maximoHorasVuelo;
 
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 /* 
 	Join
     1) selecciono los campos de distintas tablas
     2) de pasajeros unime a vuelos (from pasajeros join vuelos)
     3) relacionamos las llave (fk y pk) "pasajeros.nro_vuelo = vuelos.nro"
 */
+-- --------------------------------------------------------
+-- --------------------------------------------------------
 
-select pasaporte ,ciudad, precio from pasajeros 
+-- INNER JOIN explícito (Actualmente)
+select pasaporte ,ciudad, precio from pasajeros
 join vuelos on pasajeros.nro_vuelo = vuelos.nro;
+
+
+-- INNER JOIN implícito (Antiguamente)
+select pasaporte ,ciudad, precio from pasajeros, vuelos
+where pasajeros.nro_vuelo = vuelos.nro;
+
+-- Natural join (opcional)
+-- Se usa siempre y cuando las tablas compartan PK y FK con el mismo nombre
+select pasajeros.pasaporte, personas.nombre from pasajeros
+natural join personas;
 
 -- Obtenemos la cantidad de pasajeros con destino a chile
 select count(*) as cantidad_pasajeros, ciudad from pasajeros 
@@ -124,3 +156,27 @@ join piloto_personal p_p on p_p.nroLegajo_personal = p.nroLegajo
 join pilotos pi on p_p.nroLegajo_piloto = pi.nroLegajo
 join aviones a on pi.nro_avion = a.nro;
 
+-- -------------------------------------------------------
+-- --------------------------------------------------------
+-- -------------- Consultas anidadas
+-- --------------------------------------------------------
+-- --------------------------------------------------------
+/* 
+	Agrupamos y contamos la suma de precio de los vuelos que sean mayores 
+	al promedio del precio de chile
+*/
+
+select avg(precio), ciudad from vuelos 
+group by ciudad having avg(precio) > (
+	select avg(precio) from vuelos where ciudad = "chile"
+);
+select * from vuelos;
+
+/* 
+	Seleccioname pasaporte de pasajeros donde el identificador sea igual a la clave
+	secundaria de la tabla vuelos en la subconsulta y donde la ciudad sea igual a colombia
+*/
+SELECT pasaporte
+FROM pasajeros
+WHERE nro_vuelo in (SELECT nro 
+ FROM vuelos where ciudad = "colombia");
