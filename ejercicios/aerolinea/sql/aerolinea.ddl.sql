@@ -1,5 +1,5 @@
 -- Comentario de una linea
-
+-- asd
 /* 
 	Comentario de bloque
 */
@@ -108,3 +108,46 @@ references personal (nroLegajo);
 alter table personas 
 add foreign key (pasaporte)
 references pasajeros (pasaporte);
+
+/* 
+	Alter Table
+*/
+
+-- Renombrar tabla
+ALTER TABLE piloto_personal
+RENAME pilotos_personal;
+
+SELECT * FROM pilotos_personal;
+
+-- Renombrar columna
+ALTER TABLE pasajeros
+CHANGE pasaporte dni INT;
+
+-- Agregar columna
+/*ALTER TABLE vuelos
+ADD COLUMN precio DOUBLE;*/
+
+
+ALTER TABLE vuelos
+ADD COLUMN columnademas VARCHAR(50);
+
+
+-- Eliminar columna
+ALTER TABLE vuelos 
+DROP COLUMN columnademas;
+
+
+-- Modificar tipo de dato (modificar extra)
+ALTER TABLE aviones 
+MODIFY column modelo VARCHAR(25);
+
+
+-- Eliminar constraint
+alter table pilotos_personal
+modify column id int;
+
+
+
+-- Eliminar Primary key
+alter table pilotos_personal
+drop primary KEY;
